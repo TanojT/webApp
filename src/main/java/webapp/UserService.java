@@ -1,5 +1,6 @@
 package webapp;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,9 +14,7 @@ public class UserService {
 
     private DbConnection dbConnection;
 
-    public void createUser(){
-        
-    }
+    
 
     public String getUsers() {
         log.trace("Entering this getUsers method");
@@ -51,5 +50,30 @@ public class UserService {
 
         return "Error occured while adding user to the database";
 
+    }
+    public String saveUser(User user){
+        UserDAO userDAO =  new UserDAO();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        user.setCreateTime(timestamp);
+        userDAO.save(user);
+        return "user saved";
+    }
+    public String fetchUser(){
+        UserDAO userDAO =  new UserDAO();
+        log.trace("Entering this getUsers method");
+        
+        List<User> users= userDAO.getUsers();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = "";
+        try {
+            log.debug("writing users as:"+users);
+            response = objectMapper.writeValueAsString(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Error occured in getUsers method db close:"+e.getMessage());
+        }
+        
+        log.trace("Exiting this getUsers method with response:"+response);
+        return response;
     }
 }

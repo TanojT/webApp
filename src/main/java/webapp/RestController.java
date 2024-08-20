@@ -27,7 +27,8 @@ public class RestController{
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getUsers")
     public String getUsers(){
-        String response = userService.getUsers();
+        //String response = userService.getUsers();
+        String response = userService.fetchUser();
         return response;
     }
 
@@ -36,16 +37,17 @@ public class RestController{
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/addUser")
     public String addUser(User user){
-        return userService.addUser(user);
-        
+        //return userService.addUser(user);
+        return userService.saveUser(user);
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/addUsers")
-    public String addUsers(Map<String,String> user){
-        User tempUser=new User(user.get("email"),user.get("password"),user.get("userName"),new Timestamp(System.currentTimeMillis()));
-        return userService.addUser(tempUser);
-    }
+     @POST
+     @Consumes(MediaType.APPLICATION_JSON)
+     @Produces(MediaType.APPLICATION_JSON)
+     @Path("/addUsers")
+     public String addUsers(Map<String,String> user){
+         User tempUser=new User(user.get("userName"),user.get("email"),user.get("password"),new Timestamp(System.currentTimeMillis()));
+         // return userService.addUser(tempUser);
+         return userService.saveUser(tempUser);
+     }
 }
